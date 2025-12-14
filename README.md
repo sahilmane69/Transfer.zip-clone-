@@ -1,7 +1,7 @@
 # Transfer.zip Clone
 
-A minimal **Transfer.zip inspired file sharing app** built with **Next.js, TypeScript, Tailwind CSS, and GSAP**.  
-Focused on clean UI, smooth animations, and real API-based file uploads.
+A minimal **Transfer.zip-inspired file sharing app** built with **Next.js, TypeScript, Tailwind CSS, and GSAP**.  
+Focused on clean UI, smooth animations, and real API-based file transfers.
 
 ![Preview](public/images/ss.png)
 
@@ -10,12 +10,13 @@ Focused on clean UI, smooth animations, and real API-based file uploads.
 - TypeScript
 - Tailwind CSS
 - GSAP
-- API Routes (File Upload)
+- API Routes
 
 ## Features
 - Modern landing page UI
-- Click-to-upload files
-- Secure API-based uploads
+- File upload via API
+- Share files using **unique link**
+- Share files using **QR code (scanner-based)**
 - Smooth GSAP animations
 
 ## Getting Started
