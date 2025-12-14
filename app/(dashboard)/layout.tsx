@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
     LayoutDashboard,
     Upload,
@@ -12,7 +15,6 @@ import {
     X
 } from "lucide-react";
 import { useState } from "react";
-import Image from "next/image";
 
 const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -27,7 +29,37 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const router = useRouter();
+    const { data: session, status } = useSession();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    // Redirect to signin if not authenticated
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/signin");
+        }
+    }, [status, router]);
+
+    // Show loading while checking auth
+    if (status === "loading") {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Don't render if not authenticated
+    if (!session) {
+        return null;
+    }
+
+    const handleSignOut = async () => {
+        await signOut({ redirect: true, callbackUrl: "/" });
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -52,16 +84,8 @@ export default function DashboardLayout({
                     {/* Logo */}
                     <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="relative w-8 h-8">
-                                <Image
-                                    src="/logo.webp"
-                                    alt="Transfer.zip Logo"
-                                    fill
-                                    className="object-contain"
-                                    priority
-                                />
-                            </div>
-                            <span className="font-bold text-lg">Transfer.zip</span>
+                            <div className="w-8 h-8 bg-blue-600 rounded-lg" />
+                            <span className="font-bold text-lg">Transfer</span>
                         </Link>
                         <button
                             onClick={() => setSidebarOpen(false)}
@@ -98,21 +122,24 @@ export default function DashboardLayout({
 
                     {/* User section */}
                     <div className="border-t border-gray-200 p-4">
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer mb-2">
                             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                SM
+                                {session.user?.name?.charAt(0) || session.user?.email?.charAt(0) || "U"}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-gray-900 truncate">
-                                    Sahil mane
+                                    {session.user?.name || "User"}
                                 </p>
                                 <p className="text-xs text-gray-500 truncate">
-                                    sahilmanecode@gmail.com
+                                    {session.user?.email}
                                 </p>
                             </div>
                         </div>
 
-                        <button className="w-full flex items-center gap-3 px-4 py-2 mt-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                        <button
+                            onClick={handleSignOut}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        >
                             <LogOut className="w-5 h-5" />
                             Sign Out
                         </button>
@@ -132,16 +159,8 @@ export default function DashboardLayout({
                             <Menu className="w-6 h-6" />
                         </button>
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="relative w-8 h-8">
-                                <Image
-                                    src="/logo.webp"
-                                    alt="Transfer.zip Logo"
-                                    fill
-                                    className="object-contain"
-                                    priority
-                                />
-                            </div>
-                            <span className="font-bold">Transfer.zip</span>
+                            <div className="w-8 h-8 bg-blue-600 rounded-lg" />
+                            <span className="font-bold">Transfer</span>
                         </Link>
                         <div className="w-6" /> {/* Spacer for centering */}
                     </div>
