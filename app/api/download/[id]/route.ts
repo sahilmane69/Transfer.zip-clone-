@@ -1,6 +1,6 @@
 // app/api/download/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 import { readFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
@@ -115,14 +115,14 @@ export async function DELETE(
             );
         }
 
-        // In production, check if user owns the file or is admin
+
         await prisma.transfer.delete({
             where: { id }
         });
 
-        // Delete physical file
+
         const filePath = path.join(process.cwd(), "uploads", `${id}.enc`);
-        await unlink(filePath).catch(() => {}); // Ignore if file doesn't exist
+        await unlink(filePath).catch(() => {});
 
         return NextResponse.json({
             success: true,

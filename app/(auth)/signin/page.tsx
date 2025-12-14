@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -57,7 +58,13 @@ export default function SignInPage() {
                 <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
                     {/* Logo and title */}
                     <div className="text-center mb-8">
-                        <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto mb-4" />
+                        <Image
+                            src="/img.png"
+                            alt="Logo"
+                            width={48}
+                            height={48}
+                            className="w-12 h-12 mx-auto mb-4 rounded-xl"
+                        />
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">
                             Welcome back
                         </h1>
